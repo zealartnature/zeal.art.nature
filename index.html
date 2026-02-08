@@ -92,23 +92,57 @@
             font-size: 0.9rem;
             color: #777;
         }
-    </style>
-</head>
-<body>
+    <style>
+        /* Kontener dla przycisków */
+        .buttons-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px; /* Odstęp między przyciskami */
+            flex-wrap: wrap; /* Zawijanie na telefonach */
+            margin-top: 30px;
+        }
 
-    <header>
-        <div class="logo">Zeal Art Nature</div>
-        <p>Gdy technologia 3D spotyka organiczną formę</p>
-    </header>
+        /* Wspólne cechy obu przycisków */
+        .btn-base {
+            display: inline-block;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 1rem;
+            min-width: 200px; /* Stała szerokość minimalna, by były równe */
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        /* Specyfika Sklepu */
+        .btn-shop {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* Specyfika Facebooka */
+        .btn-fb {
+            background-color: #1877F2;
+            color: white;
+        }
+
+        /* Efekt najechania dla obu */
+        .btn-base:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            filter: brightness(1.1);
+        }
+    </style>
 
     <section class="hero">
         <h1>Tworzymy przyszłość z natury projektów</h1>
         <p>Profesjonalne skanowanie, modelowanie i druk 3D na najwyższym poziomie.</p>
         
         <div class="buttons-container">
-            <a href="https://twoj-sklep.pl" class="btn-shop">Odwiedź Sklep</a>
-            
-            <a href="https://www.facebook.com/share/1AckiaE3jA/" class="btn-fb" target="_blank">Odwiedź nas na Facebooku</a>
+            <a href="https://twoj-sklep.pl" class="btn-base btn-shop">🛒 Odwiedź Sklep</a>
+            <a href="https://www.facebook.com/TWOJA-STRONA" class="btn-base btn-fb" target="_blank">f Odwiedź Facebook</a>
         </div>
     </section>
 
