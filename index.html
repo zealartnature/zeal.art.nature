@@ -1,169 +1,862 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zeal Art Nature | Projektowanie i Druk 3D</title>
-    <style>
-        /* --- ŁATWA EDYCJA --- */
-        :root {
-            --primary-color: #4a6741; /* Kolor przewodni (leśna zieleń) */
-            --dark-color: #2c3e50;
-            --light-color: #f4f7f6;
-            --shop-url: "https://allegro.pl/uzytkownik/ZealArtNature"; /* Tutaj wpisz adres sklepu */
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Z.A.N — Zakład Automatyki Nowoczesnej</title>
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            line-height: 1.6;
-            background-color: var(--light-color);
-            color: var(--dark-color);
-        }
+  <!-- Google Fonts: Display + Body pairing -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
 
-        header {
-            background: white;
-            padding: 2rem;
-            text-align: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
+  <style>
+    /* =============================================
+       CSS CUSTOM PROPERTIES (design tokens)
+    ============================================= */
+    :root {
+      --bg:       #0a0a0a;       /* near-black background */
+      --surface:  #111111;       /* cards / sections */
+      --border:   #1e1e1e;       /* subtle dividers */
+      --accent:   #c8a96e;       /* warm gold accent */
+      --accent2:  #4a7c8e;       /* steel-blue secondary accent */
+      --text:     #e8e2d9;       /* warm white body text */
+      --muted:    #5a5550;       /* muted / label text */
+      --heading:  'Bebas Neue', sans-serif;
+      --body:     'DM Sans', sans-serif;
+      --ease:     cubic-bezier(0.16, 1, 0.3, 1);
+    }
 
-        .logo {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: var(--primary-color);
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
+    /* =============================================
+       RESET & BASE
+    ============================================= */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
 
-        .hero {
-            padding: 4rem 1rem;
-            text-align: center;
-            background: linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.8)), 
-                        url('https://www.pexels.com/pl-pl/zdjecie/technologia-komputer-nowoczesny-produkcja-19149826/');
-            background-size: cover;
-            background-position: center;
-        }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--body);
+      font-weight: 300;
+      font-size: 16px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
 
-        .services {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 2rem;
-            padding: 3rem 1rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
 
-        .service-card {
-            background: white;
-            padding: 2rem;
-            border-radius: 15px;
-            width: 250px;
-            text-align: center;
-            transition: transform 0.3s;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        }
+    /* =============================================
+       CURSOR DOT — subtle branded cursor
+    ============================================= */
+    .cursor {
+      position: fixed;
+      width: 8px; height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s, width 0.3s var(--ease), height 0.3s var(--ease), opacity 0.3s;
+    }
+    .cursor.big { width: 40px; height: 40px; opacity: 0.3; }
 
-        .service-card:hover {
-            transform: translateY(-10px);
-        }
+    /* =============================================
+       GRID NOISE OVERLAY — subtle texture on bg
+    ============================================= */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 39px, var(--border) 40px),
+        repeating-linear-gradient(90deg, transparent, transparent 39px, var(--border) 40px);
+      opacity: 0.4;
+      pointer-events: none;
+      z-index: 0;
+    }
 
-        .btn-shop {
-            display: inline-block;
-            background-color: var(--primary-color);
-            color: white;
-            padding: 1rem 2.5rem;
-            text-decoration: none;
-            border-radius: 30px;
-            font-weight: bold;
-            font-size: 1.2rem;
-            margin-top: 2rem;
-            transition: background 0.3s;
-        }
+    /* =============================================
+       NAVIGATION
+    ============================================= */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.5rem 4rem;
+      /* glassmorphism strip */
+      background: rgba(10, 10, 10, 0.8);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
 
-        .btn-shop:hover {
-            background-color: #385232;
-        }
+      /* entrance animation */
+      opacity: 0;
+      transform: translateY(-20px);
+      animation: fadeDown 0.8s var(--ease) 0.2s forwards;
+    }
 
-        footer {
-            text-align: center;
-            padding: 2rem;
-            font-size: 0.9rem;
-            color: #777;
-        }
-    <style>
-        /* Kontener dla przycisków */
-        .buttons-container {
-            display: flex;
-            justify-content: center;
-            gap: 20px; /* Odstęp między przyciskami */
-            flex-wrap: wrap; /* Zawijanie na telefonach */
-            margin-top: 30px;
-        }
+    .nav-logo {
+      font-family: var(--heading);
+      font-size: 2rem;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+    }
+    .nav-logo span { color: var(--text); }
 
-        /* Wspólne cechy obu przycisków */
-        .btn-base {
-            display: inline-block;
-            padding: 15px 30px;
-            text-decoration: none;
-            border-radius: 30px;
-            font-weight: bold;
-            font-size: 1rem;
-            min-width: 200px; /* Stała szerokość minimalna, by były równe */
-            text-align: center;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.3s;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute; bottom: -4px; left: 0; right: 0;
+      height: 1px; background: var(--accent);
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.3s var(--ease);
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a:hover::after { transform: scaleX(1); }
 
-        /* Specyfika Sklepu */
-        .btn-shop {
-            background-color: var(--primary-color);
-            color: white;
-        }
+    /* =============================================
+       HERO SECTION
+    ============================================= */
+    #hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex; align-items: center;
+      padding: 10rem 4rem 6rem;
+      overflow: hidden;
+    }
 
-        /* Specyfika Facebooka */
-        .btn-fb {
-            background-color: #1877F2;
-            color: white;
-        }
+    /* Decorative rotating ring */
+    .hero-ring {
+      position: absolute;
+      right: -12rem; top: 50%;
+      transform: translateY(-50%);
+      width: 55vw; height: 55vw;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      animation: slowSpin 40s linear infinite;
+    }
+    .hero-ring::before {
+      content: '';
+      position: absolute;
+      inset: 4rem;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      animation: slowSpin 25s linear infinite reverse;
+    }
+    .hero-ring::after {
+      content: '';
+      position: absolute;
+      inset: 8rem;
+      border: 1px solid var(--accent);
+      border-radius: 50%;
+      opacity: 0.3;
+      animation: slowSpin 15s linear infinite;
+    }
 
-        /* Efekt najechania dla obu */
-        .btn-base:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-            filter: brightness(1.1);
-        }
-    </style>
+    .hero-content { position: relative; z-index: 1; max-width: 700px; }
 
-    <section class="hero">
-        <h1>Tworzymy przyszłość z natury projektów</h1>
-        <p>Profesjonalne skanowanie, modelowanie i druk 3D na najwyższym poziomie.</p>
-        
-        <div class="buttons-container">
-            <a href="https://allegro.pl/uzytkownik/ZealArtNature" class="btn-base btn-shop">🛒 Odwiedź Sklep</a>
-            <a href="https://www.facebook.com/share/1AckiaE3jA/" class="btn-base btn-fb" target="_blank">f Odwiedź Facebook</a>
+    .hero-label {
+      display: inline-block;
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      padding: 0.3rem 0.9rem;
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.8s var(--ease) 0.6s forwards;
+    }
+
+    .hero-title {
+      font-family: var(--heading);
+      font-size: clamp(4rem, 9vw, 8rem);
+      line-height: 0.95;
+      letter-spacing: 0.05em;
+      margin-bottom: 1.5rem;
+    }
+    /* Each word animated with delay */
+    .hero-title .word {
+      display: block;
+      overflow: hidden;
+    }
+    .hero-title .word span {
+      display: block;
+      opacity: 0;
+      transform: translateY(100%);
+    }
+    .hero-title .word:nth-child(1) span { animation: slideUp 0.9s var(--ease) 0.8s forwards; }
+    .hero-title .word:nth-child(2) span { animation: slideUp 0.9s var(--ease) 1.0s forwards; color: var(--accent); }
+    .hero-title .word:nth-child(3) span { animation: slideUp 0.9s var(--ease) 1.2s forwards; }
+
+    .hero-desc {
+      font-size: 1rem;
+      color: var(--muted);
+      max-width: 420px;
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      animation: fadeUp 0.8s var(--ease) 1.4s forwards;
+    }
+
+    .hero-cta {
+      display: inline-block;
+      font-size: 0.8rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--bg);
+      background: var(--accent);
+      padding: 0.9rem 2.2rem;
+      text-decoration: none;
+      transition: background 0.3s, transform 0.3s var(--ease);
+      opacity: 0;
+      animation: fadeUp 0.8s var(--ease) 1.6s forwards;
+    }
+    .hero-cta:hover { background: var(--text); transform: translateY(-2px); }
+
+    /* Scroll indicator */
+    .scroll-hint {
+      position: absolute;
+      bottom: 2.5rem; left: 4rem;
+      display: flex; align-items: center; gap: 1rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      opacity: 0;
+      animation: fadeUp 0.8s var(--ease) 2s forwards;
+    }
+    .scroll-line {
+      width: 40px; height: 1px;
+      background: var(--accent);
+      transform-origin: left;
+      animation: lineGrow 1.2s var(--ease) 2.2s both;
+    }
+
+    /* =============================================
+       SECTION SHARED STYLES
+    ============================================= */
+    section { position: relative; z-index: 1; padding: 7rem 4rem; }
+
+    .section-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.2rem;
+    }
+
+    .section-title {
+      font-family: var(--heading);
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      line-height: 1;
+      letter-spacing: 0.04em;
+      margin-bottom: 1.5rem;
+    }
+
+    .section-divider {
+      width: 60px; height: 2px;
+      background: var(--accent);
+      margin-bottom: 3rem;
+    }
+
+    /* Reveal animation (triggered via JS IntersectionObserver) */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.9s var(--ease), transform 0.9s var(--ease);
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* =============================================
+       SERVICES SECTION
+    ============================================= */
+    #services { background: var(--surface); }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1px; /* hairline gaps become borders */
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .service-card {
+      background: var(--surface);
+      padding: 2.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.4s;
+      cursor: default;
+    }
+    .service-card::before {
+      /* hover fill effect */
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(200, 169, 110, 0.06), rgba(74, 124, 142, 0.06));
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+    .service-card:hover::before { opacity: 1; }
+    .service-card:hover .service-icon { color: var(--accent); transform: scale(1.15); }
+
+    .service-icon {
+      font-size: 2rem;
+      margin-bottom: 1.2rem;
+      color: var(--muted);
+      transition: color 0.4s, transform 0.4s var(--ease);
+      display: block;
+    }
+
+    .service-name {
+      font-family: var(--heading);
+      font-size: 1.5rem;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.7rem;
+    }
+
+    .service-desc { font-size: 0.9rem; color: var(--muted); line-height: 1.8; }
+
+    /* Reveal stagger for cards */
+    .service-card:nth-child(1) { transition-delay: 0.1s; }
+    .service-card:nth-child(2) { transition-delay: 0.2s; }
+    .service-card:nth-child(3) { transition-delay: 0.3s; }
+    .service-card:nth-child(4) { transition-delay: 0.4s; }
+    .service-card:nth-child(5) { transition-delay: 0.5s; }
+
+    /* =============================================
+       ABOUT SECTION
+    ============================================= */
+    #about {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: center;
+    }
+
+    .about-visual {
+      position: relative;
+      height: 420px;
+    }
+    /* Layered decorative boxes */
+    .about-visual .box {
+      position: absolute;
+      border: 1px solid var(--border);
+    }
+    .about-visual .box-1 { inset: 0; }
+    .about-visual .box-2 { inset: 20px 20px -20px -20px; border-color: var(--accent); opacity: 0.3; animation: breathe 4s ease-in-out infinite; }
+    .about-visual .box-3 { inset: 40px 40px -40px -40px; opacity: 0.15; animation: breathe 4s ease-in-out 2s infinite; }
+
+    .about-visual .crosshair {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 60px; height: 60px;
+    }
+    .about-visual .crosshair::before,
+    .about-visual .crosshair::after {
+      content: '';
+      position: absolute;
+      background: var(--accent);
+    }
+    .about-visual .crosshair::before { width: 100%; height: 1px; top: 50%; transform: translateY(-50%); }
+    .about-visual .crosshair::after  { height: 100%; width: 1px; left: 50%; transform: translateX(-50%); }
+
+    .about-stats {
+      display: flex; gap: 3rem;
+      margin-top: 2.5rem;
+    }
+    .stat-value {
+      font-family: var(--heading);
+      font-size: 3rem;
+      color: var(--accent);
+      line-height: 1;
+    }
+    .stat-label { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
+
+    /* =============================================
+       PROCESS SECTION
+    ============================================= */
+    #process { background: var(--surface); }
+
+    .process-steps {
+      display: flex;
+      gap: 0;
+      position: relative;
+    }
+    /* connecting line */
+    .process-steps::before {
+      content: '';
+      position: absolute;
+      top: 1.6rem; left: 1.6rem; right: 1.6rem;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .step {
+      flex: 1;
+      padding-top: 4rem;
+      padding-right: 2rem;
+      position: relative;
+    }
+    .step-num {
+      position: absolute;
+      top: 0; left: 0;
+      width: 3.2rem; height: 3.2rem;
+      border: 1px solid var(--accent);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--heading);
+      font-size: 1.1rem;
+      color: var(--accent);
+      background: var(--surface);
+      z-index: 1;
+    }
+    .step-title { font-family: var(--heading); font-size: 1.3rem; letter-spacing: 0.06em; margin-bottom: 0.6rem; }
+    .step-desc { font-size: 0.85rem; color: var(--muted); }
+
+    /* =============================================
+       CONTACT SECTION
+    ============================================= */
+    #contact {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: start;
+    }
+
+    .contact-info p { color: var(--muted); font-size: 0.95rem; max-width: 340px; }
+    .contact-detail {
+      margin-top: 2.5rem;
+      display: flex; flex-direction: column; gap: 1.2rem;
+    }
+    .contact-row {
+      display: flex; align-items: center; gap: 1rem;
+      font-size: 0.9rem; color: var(--text);
+    }
+    .contact-row .icon { color: var(--accent); font-size: 1.1rem; min-width: 20px; }
+
+    /* Form */
+    .contact-form { display: flex; flex-direction: column; gap: 1.2rem; }
+
+    .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+    .form-group label {
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .form-group input,
+    .form-group textarea {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: var(--body);
+      font-size: 0.9rem;
+      padding: 0.8rem 1rem;
+      outline: none;
+      transition: border-color 0.3s;
+      resize: none;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus { border-color: var(--accent); }
+
+    .form-btn {
+      margin-top: 0.5rem;
+      padding: 0.9rem 2rem;
+      background: transparent;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      font-family: var(--body);
+      font-size: 0.78rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.3s, color 0.3s, transform 0.3s var(--ease);
+    }
+    .form-btn:hover { background: var(--accent); color: var(--bg); transform: translateY(-2px); }
+
+    /* =============================================
+       FOOTER
+    ============================================= */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 4rem;
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    footer .footer-logo { font-family: var(--heading); font-size: 1.4rem; color: var(--accent); }
+
+    /* =============================================
+       KEYFRAME ANIMATIONS
+    ============================================= */
+    @keyframes fadeDown  { to { opacity: 1; transform: none; } }
+    @keyframes fadeUp    { to { opacity: 1; transform: none; } }
+    @keyframes slideUp   { to { opacity: 1; transform: none; } }
+    @keyframes slowSpin  { to { transform: translateY(-50%) rotate(360deg); } }
+    @keyframes breathe   { 0%,100% { opacity: 0.3; } 50% { opacity: 0.7; } }
+    @keyframes lineGrow  { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+    /* =============================================
+       RESPONSIVE — mobile adjustments
+    ============================================= */
+    @media (max-width: 900px) {
+      nav { padding: 1.2rem 2rem; }
+      .nav-links { display: none; }
+      section, #hero { padding-left: 2rem; padding-right: 2rem; }
+      #about, #contact { grid-template-columns: 1fr; gap: 3rem; }
+      .about-visual { height: 250px; }
+      .process-steps { flex-direction: column; }
+      .process-steps::before { display: none; }
+      .step { padding-top: 1rem; padding-left: 4rem; }
+      .step-num { top: 0; left: 0; }
+      .hero-ring { display: none; }
+      footer { flex-direction: column; gap: 1rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- CURSOR DOT -->
+  <div class="cursor" id="cursor"></div>
+
+  <!-- ===== NAVIGATION ===== -->
+  <nav>
+    <div class="nav-logo">Z.A.N<span>.</span></div>
+    <ul class="nav-links">
+      <li><a href="#services">Usługi</a></li>
+      <li><a href="#about">O nas</a></li>
+      <li><a href="#process">Proces</a></li>
+      <li><a href="#contact">Kontakt</a></li>
+    </ul>
+  </nav>
+
+  <!-- ===== HERO SECTION ===== -->
+  <section id="hero">
+    <!-- Decorative rotating ring background -->
+    <div class="hero-ring"></div>
+
+    <div class="hero-content">
+      <!-- Badge label -->
+      <div class="hero-label">Zakład Automatyki Nowoczesnej</div>
+
+      <!-- Animated title — each word slides up individually -->
+      <h1 class="hero-title">
+        <div class="word"><span>Nowoczesne</span></div>
+        <div class="word"><span>Rozwiązania</span></div>
+        <div class="word"><span>Technologiczne</span></div>
+      </h1>
+
+      <p class="hero-desc">
+        Precyzja, innowacja i zaawansowana technologia — od grafiki komputerowej
+        po obróbkę CNC i haft komputerowy.
+      </p>
+
+      <a href="#services" class="hero-cta">Poznaj nasze usługi</a>
+    </div>
+
+    <!-- Scroll hint at bottom left -->
+    <div class="scroll-hint">
+      <div class="scroll-line"></div>
+      Przewiń
+    </div>
+  </section>
+
+  <!-- ===== SERVICES SECTION ===== -->
+  <section id="services">
+    <div class="reveal">
+      <div class="section-label">Co robimy</div>
+      <h2 class="section-title">Nasze Usługi</h2>
+      <div class="section-divider"></div>
+    </div>
+
+    <!-- Grid of service cards — hover lifts icon with gold glow -->
+    <div class="services-grid reveal">
+
+      <div class="service-card">
+        <span class="service-icon">◈</span>
+        <div class="service-name">Grafika Komputerowa</div>
+        <p class="service-desc">
+          Projektowanie wizualizacji, identyfikacja wizualna, materiały marketingowe
+          i zaawansowana obróbka graficzna dostosowana do potrzeb klienta.
+        </p>
+      </div>
+
+      <div class="service-card">
+        <span class="service-icon">⬡</span>
+        <div class="service-name">Projektowanie CAD</div>
+        <p class="service-desc">
+          Precyzyjne modele 2D i 3D do produkcji, architektury i inżynierii.
+          Dokumentacja techniczna spełniająca normy branżowe.
+        </p>
+      </div>
+
+      <div class="service-card">
+        <span class="service-icon">⬢</span>
+        <div class="service-name">Druk 3D</div>
+        <p class="service-desc">
+          Szybkie prototypowanie i produkcja małoseryjna. Szeroki wybór materiałów —
+          od PLA po zaawansowane tworzywa techniczne.
+        </p>
+      </div>
+
+      <div class="service-card">
+        <span class="service-icon">⚙</span>
+        <div class="service-name">Obróbka CNC</div>
+        <p class="service-desc">
+          Frezowanie, toczenie i cięcie z najwyższą dokładnością. Obróbka metali,
+          tworzyw i drewna według indywidualnych projektów.
+        </p>
+      </div>
+
+      <div class="service-card">
+        <span class="service-icon">✦</span>
+        <div class="service-name">Haft Komputerowy</div>
+        <p class="service-desc">
+          Profesjonalna digitalizacja wzorów i haft maszynowy na odzieży, 
+          gadżetach i materiałach reklamowych.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== ABOUT SECTION ===== -->
+  <section id="about">
+    <!-- Decorative layered box visual (left column) -->
+    <div class="about-visual reveal">
+      <div class="box box-1"></div>
+      <div class="box box-2"></div>
+      <div class="box box-3"></div>
+      <div class="crosshair"></div>
+    </div>
+
+    <!-- Text content (right column) -->
+    <div class="reveal">
+      <div class="section-label">Kim jesteśmy</div>
+      <h2 class="section-title">Tradycja Precyzji, Siła Nowoczesności</h2>
+      <div class="section-divider"></div>
+
+      <p style="color: var(--muted); font-size: 0.95rem; line-height: 1.9;">
+        Z.A.N — Zakład Automatyki Nowoczesnej to firma łącząca doświadczenie
+        techniczne z nowoczesnym podejściem do produkcji i projektowania.
+        Działamy kompleksowo — od cyfrowego projektu, przez prototypowanie,
+        aż po gotowy wyrób.
+      </p>
+      <p style="color: var(--muted); font-size: 0.95rem; line-height: 1.9; margin-top: 1rem;">
+        Naszą siłą jest integracja różnych technologii pod jednym dachem,
+        co skraca czas realizacji i gwarantuje spójność jakości na każdym etapie.
+      </p>
+
+      <!-- Stats row -->
+      <div class="about-stats">
+        <div>
+          <div class="stat-value">5+</div>
+          <div class="stat-label">Technologii</div>
         </div>
-    </section>
-
-    <section class="services">
-        <div class="service-card">
-            <h3>Projektowanie</h3>
-            <p>Tworzenie zaawansowanych modeli CAD i organicznych rzeźb cyfrowych.</p>
+        <div>
+          <div class="stat-value">100%</div>
+          <div class="stat-label">Precyzji</div>
         </div>
-        <div class="service-card">
-            <h3>Skanowanie 3D</h3>
-            <p>Przenoszenie fizycznych obiektów do świata cyfrowego z precyzją co do mikrona.</p>
+        <div>
+          <div class="stat-value">∞</div>
+          <div class="stat-label">Możliwości</div>
         </div>
-        <div class="service-card">
-            <h3>Druk 3D</h3>
-            <p>Realizacja prototypów i gotowych produktów z ekologicznych filamentów.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PROCESS SECTION ===== -->
+  <section id="process">
+    <div class="reveal">
+      <div class="section-label">Jak działamy</div>
+      <h2 class="section-title">Nasz Proces</h2>
+      <div class="section-divider"></div>
+    </div>
+
+    <!-- Horizontal step timeline -->
+    <div class="process-steps reveal">
+
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-title">Konsultacja</div>
+        <p class="step-desc">Poznajemy Twoje potrzeby i cel projektu. Dobieramy odpowiednie technologie i materiały.</p>
+      </div>
+
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-title">Projekt</div>
+        <p class="step-desc">Tworzymy dokumentację CAD i wizualizacje. Weryfikujemy projekt przed produkcją.</p>
+      </div>
+
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-title">Produkcja</div>
+        <p class="step-desc">Realizacja z wykorzystaniem druku 3D, CNC lub haftu. Kontrola jakości na każdym etapie.</p>
+      </div>
+
+      <div class="step">
+        <div class="step-num">04</div>
+        <div class="step-title">Dostawa</div>
+        <p class="step-desc">Gotowy produkt trafia do Ciebie w uzgodnionym terminie. Oferujemy wsparcie po realizacji.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== CONTACT SECTION ===== -->
+  <section id="contact">
+    <!-- Left: info block -->
+    <div class="contact-info reveal">
+      <div class="section-label">Skontaktuj się</div>
+      <h2 class="section-title">Zacznijmy Razem</h2>
+      <div class="section-divider"></div>
+
+      <p>Masz projekt? Pytania dotyczące usług? Napisz do nas — odpowiemy szybko i znajdziemy najlepsze rozwiązanie.</p>
+
+      <div class="contact-detail">
+        <div class="contact-row">
+          <span class="icon">✉</span>
+          <span>kontakt@zan.pl</span>
         </div>
-    </section>
+        <div class="contact-row">
+          <span class="icon">☏</span>
+          <span>+48 000 000 000</span>
+        </div>
+        <div class="contact-row">
+          <span class="icon">◎</span>
+          <span>Polska</span>
+        </div>
+      </div>
+    </div>
 
-    <footer>
-        &copy; 2026 Zeal Art Nature. Wszelkie prawa zastrzeżone.
-    </footer>
+    <!-- Right: contact form -->
+    <form class="contact-form reveal" onsubmit="handleSubmit(event)">
+      <div class="form-group">
+        <label for="name">Imię i nazwisko</label>
+        <input type="text" id="name" placeholder="Jan Kowalski" required />
+      </div>
+      <div class="form-group">
+        <label for="email">E-mail</label>
+        <input type="email" id="email" placeholder="jan@firma.pl" required />
+      </div>
+      <div class="form-group">
+        <label for="service">Usługa</label>
+        <select id="service" style="background:#0a0a0a;border:1px solid var(--border);color:var(--text);font-family:var(--body);font-size:0.9rem;padding:0.8rem 1rem;outline:none;transition:border-color 0.3s;appearance:none;">
+          <option value="">Wybierz usługę...</option>
+          <option>Grafika Komputerowa</option>
+          <option>Projektowanie CAD</option>
+          <option>Druk 3D</option>
+          <option>Obróbka CNC</option>
+          <option>Haft Komputerowy</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="msg">Wiadomość</label>
+        <textarea id="msg" rows="5" placeholder="Opisz swój projekt..." required></textarea>
+      </div>
+      <button type="submit" class="form-btn">Wyślij wiadomość →</button>
+    </form>
+  </section>
 
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <div class="footer-logo">Z.A.N.</div>
+    <div>© 2024 Zakład Automatyki Nowoczesnej. Wszelkie prawa zastrzeżone.</div>
+    <div>Designed with precision.</div>
+  </footer>
+
+  <!-- =============================================
+       JAVASCRIPT
+  ============================================= -->
+  <script>
+    /* ----- CUSTOM CURSOR ----- */
+    const cursor = document.getElementById('cursor');
+    document.addEventListener('mousemove', e => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top  = e.clientY + 'px';
+    });
+    // Expand cursor on interactive elements
+    document.querySelectorAll('a, button, .service-card, input, textarea, select').forEach(el => {
+      el.addEventListener('mouseenter', () => cursor.classList.add('big'));
+      el.addEventListener('mouseleave', () => cursor.classList.remove('big'));
+    });
+
+    /* ----- SCROLL REVEAL (IntersectionObserver) -----
+       Every element with class "reveal" fades + slides
+       up when it enters the viewport.
+    ----- */
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target); // animate only once
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    /* ----- ACTIVE NAV LINK HIGHLIGHT -----
+       Highlights the nav link corresponding to
+       the currently visible section.
+    ----- */
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks  = document.querySelectorAll('.nav-links a');
+
+    const sectionObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.getAttribute('id');
+          navLinks.forEach(link => {
+            link.style.color = link.getAttribute('href') === `#${id}`
+              ? 'var(--text)' : '';
+          });
+        }
+      });
+    }, { threshold: 0.4 });
+
+    sections.forEach(s => sectionObserver.observe(s));
+
+    /* ----- FORM SUBMIT HANDLER -----
+       Simple feedback — replace with real
+       backend/email service when needed.
+    ----- */
+    function handleSubmit(e) {
+      e.preventDefault();
+      const btn = e.target.querySelector('.form-btn');
+      btn.textContent = 'Wysłano! ✓';
+      btn.style.background = 'var(--accent)';
+      btn.style.color = 'var(--bg)';
+      btn.disabled = true;
+      // Reset after 3 s
+      setTimeout(() => {
+        btn.textContent = 'Wyślij wiadomość →';
+        btn.style.background = '';
+        btn.style.color = '';
+        btn.disabled = false;
+        e.target.reset();
+      }, 3000);
+    }
+
+    /* ----- PARALLAX HERO RING -----
+       Gentle depth effect as user scrolls.
+    ----- */
+    const ring = document.querySelector('.hero-ring');
+    window.addEventListener('scroll', () => {
+      const offset = window.scrollY * 0.15;
+      if (ring) ring.style.transform = `translateY(calc(-50% + ${offset}px))`;
+    }, { passive: true });
+  </script>
 </body>
 </html>
